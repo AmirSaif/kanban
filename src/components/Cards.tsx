@@ -1,6 +1,6 @@
 import { Issue } from "../types";
 import { Link } from "react-router-dom";
-export default function Cards({ issue,handleMovingBack,handleMovingForward }: { issue: Issue,handleMovingBack:(issue:Issue)=>void,handleMovingForward:(issue:Issue)=>void }) {
+export default function Cards({ issue,handleMovingBack,handleMovingForward,showRollback,undoStatusUpdate, lastMovedIssue }: { issue: Issue,handleMovingBack:(issue:Issue)=>void,handleMovingForward:(issue:Issue)=>void,showRollback:boolean,undoStatusUpdate:(id:string)=>void, lastMovedIssue:string }) {
   return (
     <div
       style={{
@@ -15,6 +15,7 @@ export default function Cards({ issue,handleMovingBack,handleMovingForward }: { 
         {issue.status!=='Backlog' && <button onClick={()=>handleMovingBack(issue)}>&larr;</button>}
         {issue.status!=='Done' && <button onClick={()=>handleMovingForward(issue)}>&rarr;</button>}
       </div>
+      {lastMovedIssue===issue.id && showRollback && <div style={{padding: '0.5rem'}}><button onClick={()=>undoStatusUpdate(issue.id)}>Undo</button></div>}
     </div>
   );
 }

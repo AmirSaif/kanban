@@ -1,8 +1,9 @@
+import React from "react";
 import Cards from "../components/Cards";
 import { Issue } from "../types";
-export const BoardPage = ({issues,handleMovingBack,handleMovingForward}:{issues:Issue[],handleMovingBack:(issue:Issue)=>void,handleMovingForward:(issue:Issue)=>void}) => {
-
+export const BoardPage = ({issues,handleMovingBack,handleMovingForward,showRollback,undoStatusUpdate,lastMovedIssue}:{issues:Issue[],handleMovingBack:(issue:Issue)=>void,handleMovingForward:(issue:Issue)=>void,showRollback:boolean,undoStatusUpdate:(id:string)=>void,lastMovedIssue:string}) => {
   return (
+    <>
     <div
       style={{
         padding: "1rem",
@@ -18,7 +19,7 @@ export const BoardPage = ({issues,handleMovingBack,handleMovingForward}:{issues:
           {issues
             .filter((issue) => issue.status === "Backlog")
             .map((issue) => (
-              <Cards issue={issue} key={issue.id} handleMovingForward={handleMovingForward} handleMovingBack={handleMovingBack}/>
+              <Cards lastMovedIssue={lastMovedIssue} undoStatusUpdate={undoStatusUpdate} showRollback={showRollback} issue={issue} key={issue.id} handleMovingForward={handleMovingForward} handleMovingBack={handleMovingBack}/>
             ))}
         </div>
       </div>
@@ -28,7 +29,7 @@ export const BoardPage = ({issues,handleMovingBack,handleMovingForward}:{issues:
           {issues
             .filter((issue) => issue.status === "In Progress")
             .map((issue) => (
-              <Cards issue={issue} key={issue.id} handleMovingBack={handleMovingBack} handleMovingForward={handleMovingForward}/>
+              <Cards  lastMovedIssue={lastMovedIssue} undoStatusUpdate={undoStatusUpdate} showRollback={showRollback} issue={issue} key={issue.id} handleMovingBack={handleMovingBack} handleMovingForward={handleMovingForward}/>
             ))}
         </div>
       </div>
@@ -38,10 +39,12 @@ export const BoardPage = ({issues,handleMovingBack,handleMovingForward}:{issues:
           {issues
             .filter((issue) => issue.status === "Done")
             .map((issue) => (
-              <Cards issue={issue} key={issue.id} handleMovingBack={handleMovingBack} handleMovingForward={handleMovingForward}/>
+              <Cards  lastMovedIssue={lastMovedIssue} undoStatusUpdate={undoStatusUpdate} showRollback={showRollback} issue={issue} key={issue.id} handleMovingBack={handleMovingBack} handleMovingForward={handleMovingForward}/>
             ))}
         </div>
       </div>
     </div>
+    
+    </>
   );
 };
