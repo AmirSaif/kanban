@@ -6,6 +6,17 @@ import { Issue } from "../types";
 export const IssueDetailPage = ({issues,handleResolution}:{issues:Issue[],handleResolution:(issue:Issue)=>void}) => {
     const {id} = useParams();
     const issue = issues.find(issue => issue.id === id);
+
+React.useEffect(() => {
+    const stored = JSON.parse(localStorage.getItem("recentIssues") || "[]");
+
+    const filtered = stored.filter((i: Issue) => i.id !== issue?.id);
+
+    const updated = [issue, ...filtered].slice(0, 5);
+
+    localStorage.setItem("recentIssues", JSON.stringify(updated));
+  }, [issue]);
+
     if (!issue) return <div>Issue not found</div>;
     return <div style={{padding: '1rem'}}><h2>{issue.title}</h2>
       <p>Status: {issue.status}</p>

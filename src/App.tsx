@@ -11,12 +11,23 @@ import { SettingsPage } from "./pages/SettingsPage";
 import { Navigation } from "./components/Navigation";
 import { Issue } from "./types";
 import issuesData from "./data/issues.json";
+import Modal from "./components/Modal";
 
 export const App = () => {
   const [issues, setIssues] = React.useState<Issue[]>(issuesData as Issue[]);
 const [showRollback, setShowRollback] = React.useState(false);
 const [previousStatus, setPreviousStatus] = React.useState<string>("");
 const [lastMovedIssue, setLastMovedIssue] = React.useState<string>("");
+ const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [recentIssues, setRecentIssues] = React.useState<Issue[]>([]);
+
+  const openModal = () => {
+    const stored = JSON.parse(localStorage.getItem("recentIssues") || "[]");
+    setRecentIssues(stored);
+    setIsModalOpen(true);
+  };
+
+
 
   const handleResolution = (issue: Issue) => {
     setIssues(
@@ -82,6 +93,7 @@ const [lastMovedIssue, setLastMovedIssue] = React.useState<string>("");
   return (
     <Router>
       <Navigation />
+      <button onClick={openModal}>Show Last 5 Issues</button>
       <Routes>
         <Route path="/board" element={<BoardPage lastMovedIssue={lastMovedIssue} undoStatusUpdate={undoStatusUpdate} showRollback={showRollback} issues={issues} handleMovingBack={handleMovingBack} handleMovingForward={handleMovingForward} />} />
         <Route
@@ -96,6 +108,20 @@ const [lastMovedIssue, setLastMovedIssue] = React.useState<string>("");
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="*" element={<Navigate to="/board" />} />
       </Routes>
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <h3>Last 5 Visited Issues</h3>
+        {recentIssues.length === 0 ? (
+          <p>No issues visited yet</p>
+        ) : (
+          <ul>
+            {recentIssues.map((issue) => (
+              <li key={issue.id}>
+                {issue.title} ({issue.status})
+              </li>
+            ))}
+          </ul>
+        )}
+      </Modal>
     </Router>
   );
 };
