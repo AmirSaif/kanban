@@ -1,12 +1,13 @@
 import React from 'react';
 import {useParams} from 'react-router-dom';
 import { Issue } from "../types";
+import { useAuth } from "../auth/AuthContext";
 
 
 export const IssueDetailPage = ({issues,handleResolution}:{issues:Issue[],handleResolution:(issue:Issue)=>void}) => {
     const {id} = useParams();
     const issue = issues.find(issue => issue.id === id);
-
+  const {role} = useAuth();
 React.useEffect(() => {
     const stored = JSON.parse(localStorage.getItem("recentIssues") || "[]");
 
@@ -25,6 +26,6 @@ React.useEffect(() => {
       <p>Created At: {new Date(issue.createdAt).toLocaleString()}</p>
       <p>Assignee: {issue.assignee}</p>
       <p>Tags: {issue.tags.join(", ")}</p>
-      {issue.status!=='Done' && <button onClick={()=>handleResolution(issue)}>Resolve</button>}
+      {issue.status!=='Done' && role==='admin' && <button onClick={()=>handleResolution(issue)}>Resolve</button>}
       </div>;
 };
