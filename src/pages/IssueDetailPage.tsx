@@ -26,6 +26,11 @@ React.useEffect(() => {
       <p>Created At: {new Date(issue.createdAt).toLocaleString()}</p>
       <p>Assignee: {issue.assignee}</p>
       <p>Tags: {issue.tags.join(", ")}</p>
-      {issue.status!=='Done' && role==='admin' && <button onClick={()=>handleResolution(issue)}>Resolve</button>}
+      {issue.status!=='Done' && role==='admin' && <button style={{padding: "8px 12px",
+            borderRadius: "4px",
+            border: "none",
+            background: "#2563eb",
+            color: "white",
+            cursor: "pointer",margin: "1rem"}}  onClick={()=>handleResolution(issue)}>Resolve</button>}
       </div>;
 };
